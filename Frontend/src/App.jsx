@@ -10,7 +10,7 @@ import remarkGfm from "remark-gfm";
 const App = () => {
   const [code, setCode] = useState("");
   const [review, setReview] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // button loading state
+  const [isLoading, setIsLoading] = useState(false); 
 
   const handleReview = async () => {
     if (!code.trim()) return; // prevent empty request
@@ -18,7 +18,7 @@ const App = () => {
     setIsLoading(true); // disable button
     try {
       const response = await axios.post(`http://localhost:3000/ai/get-review`, { code });
-      console.log(response.data);
+      // console.log(response.data);
       setReview(response.data.response);
     } catch (error) {
       console.error("Error:", error);
@@ -28,23 +28,25 @@ const App = () => {
     }
   };
 
-  //function for ReactMarkdown
-  const CodeBlock = ({ value }) => {
-    const highlightedCode = Prism.highlight(value, Prism.languages.javascript, "javascript");
-    return (
-      <pre className="language-js text-sm rounded p-2 bg-black text-white">
-        <code
-          className="programming-language"
-          dangerouslySetInnerHTML={{ __html: highlightedCode }}
-        />
-      </pre>
-    );
-  };
+//function for ReactMarkdown
+const CodeBlock = ({ children }) => {
+  const codeString = String(children).replace(/\n$/, "");
+  const highlightedCode = Prism.highlight(codeString, Prism.languages.javascript, "javascript");
+  return (
+    <pre className="language-js text-sm rounded p-2 bg-black text-white">
+      <code
+        className="programming-language"
+        dangerouslySetInnerHTML={{ __html: highlightedCode }}
+      />
+    </pre>
+  );
+};
+
 
   return (
-    <div className="main h-screen w-full bg-gray-800 text-white flex flex-col md:flex-row p-5 gap-4">
+    <div className="main h-screen md:h-screen w-full bg-gray-800 text-white flex flex-col md:flex-row p-5 gap-4 md:overflow-auto ">
       {/* Left Side - Code Input */}
-      <div className="w-full md:w-1/2 h-full p-4 bg-black flex flex-col gap-4 rounded-lg">
+      <div className="w-full h-1/2 md:w-1/2 md:h-full p-4 bg-black flex flex-col gap-4 rounded-lg">
         <h2 className="text-xl font-semibold">Enter Code✨.</h2>
         <div className="flex-1 overflow-auto bg-black rounded-lg border border-gray-700 text-sm custom-scrollbar">
           <Editor
@@ -72,7 +74,7 @@ const App = () => {
       </div>
 
       {/* Right Side - Review Output */}
-      <div className="custom-scrollbar w-full md:w-1/2 h-full p-4 bg-[#121212] overflow-auto rounded-lg">
+      <div className="custom-scrollbar w-full md:w-1/2 md:h-full h-1/2 p-4 bg-[#121212] overflow-auto rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Code Review🧐.</h2>
         <div className="markdown-output">
           <ReactMarkdown
@@ -85,9 +87,12 @@ const App = () => {
                     {children}
                   </code>
                 ) : (
+                  <div className="code-block-wrapper"> {/* Wrap <pre> in a div */}
                   <CodeBlock value={String(children).replace(/\n$/, "")} />
+                </div>
                 );
               },
+              p: ({ children }) => <>{children}</>, // Override <p> to not wrap block elements
             }}
           />
         </div>
