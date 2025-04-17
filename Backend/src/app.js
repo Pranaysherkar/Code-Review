@@ -4,9 +4,10 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors({
-    origin: 'https://code-review-xzjs.vercel.app/',
+    origin: ['http://localhost:5173', 'https://code-review-xzjs.vercel.app'],
     methods: ['GET', 'POST']
   }));
+    
   app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
