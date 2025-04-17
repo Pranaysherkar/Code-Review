@@ -11,13 +11,14 @@ const App = () => {
   const [code, setCode] = useState("");
   const [review, setReview] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
+console.log(`${import.meta.env.APP_URL}`);
 
   const handleReview = async () => {
     if (!code.trim()) return; // prevent empty request
 
     setIsLoading(true); // disable button
     try {
-      const response = await axios.post(`${import.meta.env.APP_URL}ai/get-review`, { code });
+      const response = await axios.post(`${import.meta.env.VITE_APP_URL}ai/get-review`, { code });
       // console.log(response.data);
       setReview(response.data.response);
     } catch (error) {
