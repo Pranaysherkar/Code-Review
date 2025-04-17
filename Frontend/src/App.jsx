@@ -10,15 +10,18 @@ import remarkGfm from "remark-gfm";
 const App = () => {
   const [code, setCode] = useState("");
   const [review, setReview] = useState("");
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleReview = async () => {
     if (!code.trim()) return; // prevent empty request
 
     setIsLoading(true); // disable button
     try {
-      const response = await axios.post(`${import.meta.env.VITE_APP_URL}ai/get-review`, { code });
-      // console.log(response.data);
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_URL}ai/get-review`,
+        { code }
+      );
+      console.log(response.data.response);
       setReview(response.data.response);
     } catch (error) {
       console.error("Error:", error);
@@ -28,20 +31,23 @@ const App = () => {
     }
   };
 
-//function for ReactMarkdown
-const CodeBlock = ({ children }) => {
-  const codeString = String(children).replace(/\n$/, "");
-  const highlightedCode = Prism.highlight(codeString, Prism.languages.javascript, "javascript");
-  return (
-    <pre className="language-js text-sm rounded p-2 bg-black text-white">
-      <code
-        className="programming-language"
-        dangerouslySetInnerHTML={{ __html: highlightedCode }}
-      />
-    </pre>
-  );
-};
-
+  //function for ReactMarkdown
+  const CodeBlock = ({ children }) => {
+    const codeString = String(children).replace(/\n$/, "");
+    const highlightedCode = Prism.highlight(
+      codeString,
+      Prism.languages.javascript,
+      "javascript"
+    );
+    return (
+      <pre className="language-js text-sm rounded p-2 bg-black text-white">
+        <code
+          className="programming-language"
+          dangerouslySetInnerHTML={{ __html: highlightedCode }}
+        />
+      </pre>
+    );
+  };
 
   return (
     <div className="main h-screen md:h-screen w-full bg-gray-800 text-white flex flex-col md:flex-row p-5 gap-4 md:overflow-auto ">
@@ -65,7 +71,11 @@ const CodeBlock = ({ children }) => {
           />
         </div>
         <button
-          className={`bg-blue-600 ${isLoading || !code.trim() ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"} text-white py-2 rounded`}
+          className={`bg-blue-600 ${
+            isLoading || !code.trim()
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-blue-700"
+          } text-white py-2 rounded`}
           onClick={handleReview}
           disabled={isLoading || !code.trim()}
         >
@@ -87,9 +97,11 @@ const CodeBlock = ({ children }) => {
                     {children}
                   </code>
                 ) : (
-                  <div className="code-block-wrapper"> {/* Wrap <pre> in a div */}
-                  <CodeBlock value={String(children).replace(/\n$/, "")} />
-                </div>
+                  <div className="code-block-wrapper">
+                    {" "}
+                    {/* Wrap <pre> in a div */}
+                    <CodeBlock>{children}</CodeBlock>
+                  </div>
                 );
               },
               p: ({ children }) => <>{children}</>, // Override <p> to not wrap block elements
