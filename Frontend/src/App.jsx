@@ -11,7 +11,6 @@ const App = () => {
   const [code, setCode] = useState("");
   const [review, setReview] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
-console.log(`${import.meta.env.APP_URL}`);
 
   const handleReview = async () => {
     if (!code.trim()) return; // prevent empty request
