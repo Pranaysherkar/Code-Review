@@ -21,7 +21,7 @@ const App = () => {
         `${import.meta.env.VITE_APP_URL}ai/get-review`,
         { code }
       );
-      console.log(response.data.response);
+      // console.log(response.data.response);
       setReview(response.data.response);
     } catch (error) {
       console.error("Error:", error);
@@ -50,9 +50,9 @@ const App = () => {
   };
 
   return (
-    <div className="main h-screen md:h-screen w-full bg-gray-800 text-white flex flex-col md:flex-row p-5 gap-4 md:overflow-auto ">
+    <div className="main h-screen md:h-screen w-full bg-[#030712] text-white flex flex-col md:flex-row p-5 gap-4 md:overflow-auto ">
       {/* Left Side - Code Input */}
-      <div className="w-full h-1/2 md:w-1/2 md:h-full p-4 bg-black flex flex-col gap-4 rounded-lg">
+      <div className="w-full h-1/2 md:w-1/2 md:h-full p-4 bg-[#10141E] flex flex-col gap-4 rounded-lg">
         <h2 className="text-xl font-semibold">Enter Code✨.</h2>
         <div className="flex-1 overflow-auto bg-black rounded-lg border border-gray-700 text-sm custom-scrollbar">
           <Editor
@@ -65,7 +65,7 @@ const App = () => {
             className="outline-none font-mono"
             style={{
               minHeight: "100%",
-              backgroundColor: "#2D2D2D",
+              backgroundColor: "#1C2029",
               color: "#fff",
             }}
           />
@@ -79,34 +79,37 @@ const App = () => {
           onClick={handleReview}
           disabled={isLoading || !code.trim()}
         >
-          {isLoading ? "Loading..." : "Get Review"}
+          {isLoading ? "Loading..." : "Submit"}
         </button>
       </div>
 
       {/* Right Side - Review Output */}
-      <div className="custom-scrollbar w-full md:w-1/2 md:h-full h-1/2 p-4 bg-[#121212] overflow-auto rounded-lg">
+      <div className="custom-scrollbar w-full md:w-1/2 md:h-full h-1/2 p-4 bg-[#10141E] overflow-auto rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Code Review🧐.</h2>
         <div className="markdown-output">
           <ReactMarkdown
-            children={review || "Your review will appear here..."}
             remarkPlugins={[remarkGfm]}
             components={{
               code: ({ node, inline, className, children, ...props }) => {
                 return inline ? (
-                  <code className={className} {...props}>
+                  <code
+                    {...props}
+                  >
                     {children}
                   </code>
                 ) : (
                   <div className="code-block-wrapper">
-                    {" "}
-                    {/* Wrap <pre> in a div */}
                     <CodeBlock>{children}</CodeBlock>
                   </div>
                 );
               },
-              p: ({ children }) => <>{children}</>, // Override <p> to not wrap block elements
+              p: ({ children }) => (
+                <p className="text-white text-sm mb-2">{children}</p>
+              ),
             }}
-          />
+          >
+            {review || "Your review will appear here..."}
+          </ReactMarkdown>
         </div>
       </div>
     </div>
