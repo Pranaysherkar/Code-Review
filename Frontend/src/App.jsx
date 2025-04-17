@@ -17,7 +17,7 @@ const App = () => {
 
     setIsLoading(true); // disable button
     try {
-      const response = await axios.post(`http://localhost:3000/ai/get-review`, { code });
+      const response = await axios.post(`${import.meta.env.APP_URL}ai/get-review`, { code });
       // console.log(response.data);
       setReview(response.data.response);
     } catch (error) {
